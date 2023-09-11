@@ -1,6 +1,5 @@
-#HNG_API
+## DOCUMENTATION LINK HERE
 
-##DOCUMENTATION LINK HERE
 Postman Documentation-(https://documenter.getpostman.com/view/23083428/2s9YC2zDui)
 
 # HNG_API with Node.js Express CRUD Application
@@ -16,6 +15,8 @@ This is a simple CRUD (Create, Read, Update, Delete) application built using Nod
   - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
   - [Contributing](#contributing)
+  - [License](#license)
+  - [Contributor](#contributor)
 
 ## Requirements
 
@@ -35,13 +36,13 @@ This is a simple CRUD (Create, Read, Update, Delete) application built using Nod
 
    _npm install_
 
-2. \*`Set up MongoDB:`
+2. Set up MongoDB:
 
    _Install MongoDB if not already installed_.
    _Create a MongoDB database named HNG_API_.
    _Update the database configuration in config.env if needed._
 
-3. \*`Start the server::`
+3. Start the server:
 
    - npm run start
 
@@ -53,28 +54,29 @@ This is a simple CRUD (Create, Read, Update, Delete) application built using Nod
 
 ## API Endpoints
 
-    *GET /user: Get a list of all users.
-    *GET /user/:id: Get a single user by ID.
-    *POST/user: Create a new user.
+- GET /user: Get a list of all users.
+- GET /user/:id: Get a single user by ID.
+- POST/user: Create a new user.
 
-    Example Request Body:
-        {
-            "message": "User created successfully!",
-            "user": {
-                "name": "Peter Eziagor",
-                "_id": "64ffa1606391952e45a8b643",
-                "__v": 0
-            }
-        }
-    *PATCH/user/id: Update a user by ID
-    Example Request Body:
-        {
-            "message": "User updated successfully!"
-        }
-    *DELETE /user/:id: Delete a user by ID.
+  Example Request Body:
+  {
+  "message": "User created successfully!",
+  "user": {
+  "name": "Peter Eziagor",
+  "\_id": "64ffa1606391952e45a8b643",
+  "\_\_v": 0
+  }
+  }
 
+- PATCH/user/id: Update a user by ID
+  Example Request Body:
+  {
+  "message": "User updated successfully!"
+  }
 
-    Make HTTP requests to these endpoints using a tool like Postman or any API testing tool.
+  - DELETE /user/:id: Delete a user by ID.
+
+  Make HTTP requests to these endpoints using a tool like Postman or any API testing tool.
 
 ## Contributing
 
@@ -85,10 +87,12 @@ This is a simple CRUD (Create, Read, Update, Delete) application built using Nod
 3. Make your changes and test thoroughly.
 4. Submit a pull request with a clear description of your changes.
 
-##License
+## License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 Replace `<repository_url>` and `<repository_directory>` with your actual repository URL and directory name. This `README.md` provides information on how to set up, use, and contribute to your CRUD application.
 
-##Contributor
-\*Sylvester Eziagor
+## Contributor
+
+- Sylvester Eziagor
