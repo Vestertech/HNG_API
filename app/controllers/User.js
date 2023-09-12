@@ -69,7 +69,7 @@ exports.update = async (req, res) => {
     if (!updatedUser) {
       return res
         .status(404)
-        .json({ message: error.messgae || `User not found!` });
+        .json({ message: error.message || `User not found!` });
     }
     res.status(201).json({ message: "User updated successfully!" });
   } catch (error) {
