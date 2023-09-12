@@ -1,8 +1,9 @@
-## DOCUMENTATION LINK HERE
+# DOCUMENTATION LINK HERE
 
-Postman Documentation-(https://documenter.getpostman.com/view/23083428/2s9YC2zDui)
+Postman Documentation-(<https://documenter.getpostman.com/view/23083428/2s9YC2zDui>)
 
-# HNG_API with Node.js Express CRUD Application
+````markdown
+## HNG_API with Node.js Express CRUD Application
 
 This is a simple CRUD (Create, Read, Update, Delete) application built using Node.js and Express.js, with a MongoDB database. It allows you to manage user records.
 
@@ -32,9 +33,9 @@ This is a simple CRUD (Create, Read, Update, Delete) application built using Nod
    cd <repository_directory>
    ```
 
-   \*`Install depencency`
+   _`Install depencency`_
 
-   _npm install_
+npm install
 
 2. Set up MongoDB:
 
@@ -96,3 +97,4 @@ Replace `<repository_url>` and `<repository_directory>` with your actual reposit
 ## Contributor
 
 - Sylvester Eziagor
+````
