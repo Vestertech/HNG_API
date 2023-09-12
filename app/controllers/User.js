@@ -1,15 +1,24 @@
 const UserModel = require("../model/user");
 
+// Create and Save a new user
 exports.create = async (req, res) => {
   try {
-    if (!req.body.name || !req.body.email || !req.body.phone) {
-      return res.status(400).json({ message: "Content can not be empty!" });
+    // Validate input fields as strings
+    const { name, email, phone } = req.body;
+    if (
+      typeof name !== "string" ||
+      typeof email !== "string" ||
+      typeof phone !== "string"
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Field data types should be strings." });
     }
 
     const user = new UserModel({
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
+      name,
+      email,
+      phone,
     });
 
     const data = await user.save();
@@ -68,14 +77,24 @@ exports.update = async (req, res) => {
   }
 };
 
+// Delete a user with the specified id in the request or a name
 exports.destroy = async (req, res) => {
   try {
-    const deletedUser = await UserModel.findByIdAndRemove(req.params.id);
+    const { id } = req.params;
+    const { name } = req.query;
 
-    if (!deletedUser) {
-      return res.status(404).json({ message: "User not found." });
+    let user;
+    if (id) {
+      user = await UserModel.findByIdAndRemove(id);
+    } else if (name) {
+      user = await UserModel.findOneAndRemove({
+        $or: [{ name }],
+      });
     }
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
     res.status(200).json({ message: "User deleted successfully!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
