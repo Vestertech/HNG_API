@@ -11,7 +11,7 @@ Welcome to the API documentation for the HNG_API. This API allows you to perform
 
 ## Base URL
 
-The base URL for all API endpoints is: `https://endpoint-dc4f.onrender.com`
+The base URL for all API endpoints is: `https://hng-api-6t54.onrender.com`
 
 ## Authentication
 
