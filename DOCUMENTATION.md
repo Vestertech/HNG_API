@@ -4,7 +4,7 @@
 
 Picture : shows overflow of the api and the request and response formats of each operation made.
 
-<img src="https://tinyurl.com/jt0wDlOV" width="400">
+<img src="https://tinyurl.com/jt0wDlOV">
 
 ````markdown
 Welcome to the API documentation for the HNG_API. This API allows you to perform CRUD (Create, Read, Update, Delete) operations on user records. It is designed to be flexible in handling dynamic input and enforces input validation.

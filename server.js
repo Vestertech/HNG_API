@@ -8,11 +8,11 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get("/api", (req, res) => {
-  res.json({
-    message: "Welcome to Sylvester's HNG_API",
-  });
-});
+// app.get("/api", (req, res) => {
+//   res.json({
+//     message: "Welcome to Sylvester's HNG_API",
+//   });
+// });
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");
   console.log(err, err.message);
@@ -51,4 +51,4 @@ const server = app.listen(Port, () => {
 
 //   Routes
 const UserRoute = require("./app/routes/User");
-app.use("/api/user", UserRoute);
+app.use("/api", UserRoute);

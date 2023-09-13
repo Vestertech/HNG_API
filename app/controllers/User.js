@@ -5,11 +5,7 @@ exports.create = async (req, res) => {
   try {
     // Validate input fields as strings
     const { name, email, phone } = req.body;
-    if (
-      typeof name !== "string" ||
-      typeof email !== "string" ||
-      typeof phone !== "string"
-    ) {
+    if (typeof name !== "string") {
       return res
         .status(400)
         .json({ message: "Field data types should be strings." });
