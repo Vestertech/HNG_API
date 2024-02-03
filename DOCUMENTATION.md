@@ -11,7 +11,7 @@ Welcome to the API documentation for the HNG_API. This API allows you to perform
 
 ## Base URL
 
-The base URL for all API endpoints is: `https://endpoint-dc4f.onrender.com`
+The base URL for all API endpoints is: `https://hng-api-6t54.onrender.com`
 
 ## Authentication
 
@@ -21,7 +21,7 @@ This API does not require authentication for basic CRUD operations.
 
 ### Create a User
 
-**Endpoint:** `/user`
+**Endpoint:** `/`
 
 **Method:** `POST`
 
@@ -90,7 +90,7 @@ _Method: `GET`_
 
 ### Retrieve User by ID or Name
 
-**Endpoint:** `/user/:id`
+**Endpoint:** `/:id`
 
 **Method:** `GET`
 
@@ -117,7 +117,7 @@ _Method: `GET`_
 
 ### Update User by ID or Name
 
-**Endpoint:** `/user/:id`
+**Endpoint:** `/:id`
 
 **Method:** `PATCH`
 
@@ -151,7 +151,7 @@ _Method: `GET`_
 
 ### Delete User by ID or Name
 
-**Endpoint:** `/user/:id`
+**Endpoint:** `/:id`
 
 **Method:** `DELETE`
 

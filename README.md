@@ -41,7 +41,7 @@ npm install
 
    _Install MongoDB if not already installed_.
    _Create a MongoDB database named HNG_API_.
-   _Update the database configuration in config.env if needed._
+   _Update the database configuration in config.env example if needed._
 
 3. Start the server:
 

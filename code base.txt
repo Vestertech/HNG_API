@@ -1,0 +1,337 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const UserRoute = require("./app/routes/userRoute");
+const bookingRoute = require("./app/routes/bookRoute");
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// app.get("/api", (req, res) => {
+//   res.json({
+//     message: "Welcome to Sylvester's HNG_API",
+//   });
+// });
+process.on("uncaughtException", (err) => {
+  console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");
+  console.log(err, err.message);
+  process.exit(1);
+});
+
+dotenv.config({ path: "./config.env" });
+
+process.on("unhandledRejection", (err) => {
+  console.log(err.name, err.message);
+  console.log("UNHANDLED REJECTION! 💥 Shutting down...");
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
+const uri = process.env.DATABASE.replace(
+  "<PASSWORD>",
+  process.env.DATABASE_PASSWORD
+);
+
+mongoose
+  .connect(uri, { useNewUrlParser: true })
+  .then(() => {
+    console.log("Database Connected Successfully!!");
+  })
+  .catch((err) => {
+    console.log("Could not connect to the database", err);
+    process.exit();
+  });
+app.use("/api/booking", bookingRoute);
+app.use("/api", UserRoute);
+
+const Port = process.env.PORT;
+const server = app.listen(Port, () => {
+  console.log(`Server is running on ${Port}... `);
+}); server.js                                                                  PORT=3200
+USER=ifeanyi
+DATABASE=mongodb+srv://ifeanyi:<PASSWORD>@restapi.7xbeazu.mongodb.net/?retryWrites=true&w=majority
+DATABASE_PASSWORD=07039002430
+PAYSTACK_SECRET_KEY=sk_test_3bd871247035ebdc488ee9f3acb57b7a328a3ae8
+PAYSTACK_PUBLIC_KEY=pk_test_7b9193c19b0f9ec45b78d67fdae60028521fd3bc config.env                                                      
+
+const axios = require("axios");
+const bookModel = require("../model/book.js");
+const bookingModel = require("../model/booking.js");
+
+// Require the library
+var paystack = require("paystack")(process.env.PAYSTACK_SECRET_KEY);
+
+exports.initializePayment = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.body.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const book = await bookModel.findById(req.body.bookId);
+    if (!book) {
+      return res.status(404).json({ message: "book not found." });
+    }
+    const res = await axios.post(
+      `https://api.paystack.co/transaction/initialize`,
+      {
+        email: user.email,
+        amount: book.price * 100,
+        callback_url: `https://google.com`,
+        currency: "NGN",
+        metadata: {
+          custom_fields: [
+            {
+              bookId: req.body.bookId,
+              userId: req.body.userId,
+            },
+          ],
+        },
+      },
+      { headers: { authorization: process.env.PAYSTACK_SECRET_KEY } }
+    );
+    res.status(200).json({
+      status: "success",
+      transaction: res.data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.paystackWebHook = async (req, res, next) => {
+  try {
+    // 1. confirm that the event is from paystack by verifying the signature sent in the header of the request with the secret key
+    const signature = req.headers["x-paystack-signature"];
+    const hash = crypto
+      .createHmac("sha512", process.env.PAYSTACK_SECRET_KEY)
+      .update(JSON.stringify(req.body))
+      .digest("hex");
+    if (hash !== signature) {
+      return res.status(400).json({ message: "Invalid signature" });
+    }
+
+    // 2. confirm that the event is a successful transaction
+    const { event, data } = req.body;
+    if (event === "charge.success") {
+      const { bookId, userId } = data.metadata;
+      // console.log(items);
+      // create a booking and update the tour date participants
+      await Booking.create({
+        bookingId: data.reference,
+        book: bookId,
+        user: userId,
+        price: data.amount / 100,
+        paidAt: data.paidAt,
+      });
+    }
+
+    res.status(200).json({ status: "success" });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "Some error occurred while making payment",
+    });
+  }
+};
+app/controllers/paymentjs              const UserModel = require("../model/user");
+
+// Create and Save a new user
+exports.create = async (req, res) => {
+  try {
+    // Validate input fields as strings
+    const { name, email, phone } = req.body;
+    if (typeof name !== "string") {
+      return res
+        .status(400)
+        .json({ message: "Field data types should be strings." });
+    }
+
+    const user = new UserModel({
+      name,
+      email,
+      phone,
+    });
+
+    const data = await user.save();
+    res.status(201).json({
+      message: "User created successfully!",
+      user: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "Some error occurred while creating user",
+    });
+  }
+};
+
+exports.findAll = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.findOne = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+    if (!req.body) {
+      return res
+        .status(400)
+        .json({ message: "Data to update can not be empty!" });
+    }
+    const id = req.params.id;
+    const updatedUser = await UserModel.findByIdAndUpdate(id, req.body, {
+      useFindAndModify: false,
+    });
+
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ message: error.message || `User not found!` });
+    }
+    res.status(201).json({ message: "User updated successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete a user with the specified id in the request or a name
+exports.destroy = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.query;
+
+    let user;
+    if (id) {
+      user = await UserModel.findByIdAndRemove(id);
+    } else if (name) {
+      user = await UserModel.findOneAndRemove({
+        $or: [{ name }],
+      });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    res.status(200).json({ message: "User deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+app/controllers/User.js                                                                                const mongoose = require("mongoose");
+
+const bookSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: [true, "Please What's your name?"],
+  },
+  price: Number,
+});
+const Book = mongoose.model("Book", bookSchema);
+
+module.exports = Book;
+app/model/book.js                                                                                     const mongoose = require("mongoose");
+
+const bookingSchema = new mongoose.Schema(
+  {
+    bookingId: {
+      type: String,
+      required: [true, "Booking must have a bookingId"],
+      unique: true,
+    },
+    book: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Book",
+      required: [true, "Booking must belong to a book"],
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: [true, "Booking must belong to a user"],
+    },
+    price: {
+      type: Number,
+      required: [true, "Booking must have a price"],
+    },
+    paid: {
+      type: Boolean,
+      default: true,
+    },
+
+    paidAt: {
+      type: Date,
+      required: [true, "Booking must have a paidAt date"],
+    },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: true,
+  }
+);
+
+bookingSchema.pre("/^find/", function (next) {
+  this.populate("user")
+    .populate({
+      path: "user",
+      select: "name email ",
+    })
+    .populate("book");
+  return next();
+});
+
+const bookings = mongoose.model("Booking", bookingSchema);
+
+module.exports = bookings;
+app/model/booking.js                                                const mongoose = require("mongoose");
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: [true, "Please What's your name?"],
+  },
+  email: { String },
+  phone: { String },
+});
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
+app/model/user.js                                                                     const express = require("express");
+const bookingController = require("../controllers/payment");
+// const paymentController = require("../controllers/payment");
+const router = express.Router();
+
+// router.post("/initializeTransaction", bookingController.initializeTransaction);
+// router.post("/paystackWebhook", bookingController.paystackWebhook);
+
+module.exports = router;
+app/routes/bookRoute.js                                                  const express = require("express");
+const UserController = require("../controllers/User");
+const router = express.Router();
+
+router.get("/", UserController.findAll);
+router.get("/:id", UserController.findOne);
+router.post("/", UserController.create);
+router.patch("/:id", UserController.update);
+router.delete("/:id", UserController.destroy);
+
+module.exports = router;
+app/routes/userRoute.js                        please, go through this code and fix any error found, I tried to implement the paystack payment gateway. but it seems to have a route configuration problem and I had to comment  the out. please fix up... and point out the corrections

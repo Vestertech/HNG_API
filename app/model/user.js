@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: [true, "Please What's your name?"],
   },
-  email: { String },
-  phone: { String },
+  email: String,
+  phone: String,
 });
 const User = mongoose.model("User", userSchema);
 
