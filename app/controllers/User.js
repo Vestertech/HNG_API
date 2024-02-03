@@ -1,4 +1,5 @@
 const UserModel = require("../model/user");
+const BookModel = require("../model/book");
 
 // Create and Save a new user
 exports.create = async (req, res) => {
@@ -94,5 +95,27 @@ exports.destroy = async (req, res) => {
     res.status(200).json({ message: "User deleted successfully!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Creating book
+exports.createBook = async (req, res) => {
+  try {
+    const { name, price } = req.body;
+
+    const book = new BookModel({
+      name,
+      price,
+    });
+
+    const data = await book.save();
+    res.status(201).json({
+      message: "Book created successfully!",
+      book: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "Some error occurred while creating the book",
+    });
   }
 };

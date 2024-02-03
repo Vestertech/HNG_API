@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-
+const UserRoute = require("./app/routes/userRoute");
+const bookingRoute = require("./app/routes/bookRoute");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,6 +44,8 @@ mongoose
     console.log("Could not connect to the database", err);
     process.exit();
   });
+app.use("/api/booking", bookingRoute);
+app.use("/api", UserRoute);
 
 const Port = process.env.PORT;
 const server = app.listen(Port, () => {
@@ -50,5 +53,3 @@ const server = app.listen(Port, () => {
 });
 
 //   Routes
-const UserRoute = require("./app/routes/User");
-app.use("/api", UserRoute);
